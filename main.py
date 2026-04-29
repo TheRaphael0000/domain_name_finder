@@ -25,10 +25,10 @@ def test_domain(domain):
     oks = open("domains_ok.txt", "r").read().split("\n")
     kos = open("domains_ko.txt", "r").read().split("\n")
     if domain in oks:
-        print(domain, "ok")
+        print(domain, "ok cached")
         return
     if domain in kos:
-        print(domain, "ko")
+        print(domain, "ko cached")
         return
 
     result_dns = is_dns_active(domain)
@@ -56,7 +56,7 @@ if __name__ == "__main__":
 
     parser.add_argument('domain_regex')
     parser.add_argument('-r', '--random', action='store_true')
-    
+
     args = parser.parse_args()
 
     if args.random:
