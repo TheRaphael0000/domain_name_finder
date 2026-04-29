@@ -51,7 +51,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         prog='domain_name_finder',
-        description='Find for domain names using regex'
+        description='Find domain names using regex'
     )
 
     parser.add_argument('domain_regex')
