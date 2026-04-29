@@ -5,11 +5,17 @@ import exrex
 import whois
 
 
+ko_filename = "domains_ko.txt"
+ok_filename = "domains_ok.txt"
+
+
 def is_dns_active(domain):
     try:
         socket.gethostbyname(domain)
         return True
-    except socket.gaierror:
+    except (socket.gaierror, socket.herror, OSError):
+        return False
+    except Exception as e:
         return False
 
 
@@ -23,20 +29,17 @@ def is_domain_used(domain_name):
 
 def print_result(domain, result=True, reason='', verbose=False):
     str = domain
-
     if verbose:
-        str += " O" if result else " X"
-
+        str += f" {'O' if result else 'X'}"
     if reason and verbose:
         str += f" {reason}"
-
     if result or verbose:
         print(str)
-    
+
 
 def test_domain(domain, verbose):
-    oks = open("domains_ok.txt", "r").read().split("\n")
-    kos = open("domains_ko.txt", "r").read().split("\n")
+    oks = open(ok_filename, "r").read().split("\n")
+    kos = open(ko_filename, "r").read().split("\n")
     if domain in oks:
         print_result(domain, result=True, reason='cache', verbose=verbose)
         return
@@ -47,20 +50,23 @@ def test_domain(domain, verbose):
     result_dns = is_dns_active(domain)
     if result_dns:
         print_result(domain, result=False, reason='dns', verbose=verbose)
-        open("domains_ko.txt", "a").write(domain + "\n")
+        open(ko_filename, "a+").write(domain + "\n")
         return
 
     result_whois = is_domain_used(domain)
     if result_whois:
         print_result(domain, result=False, reason='whois', verbose=verbose)
-        open("domains_ko.txt", "a").write(domain + "\n")
+        open(ko_filename, "a+").write(domain + "\n")
         return
 
     print_result(domain, result=True, reason='', verbose=verbose)
-    open("domains_ok.txt", "a").write(domain + "\n")
+    open(ok_filename, "a+").write(domain + "\n")
 
 
 if __name__ == "__main__":
+    # ensure files exist
+    open(ko_filename, "a+").write("")
+    open(ok_filename, "a+").write("")
 
     parser = argparse.ArgumentParser(
         prog='domain_name_finder',
