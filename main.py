@@ -21,29 +21,42 @@ def is_domain_used(domain_name):
         return False
 
 
-def test_domain(domain):
+def print_result(domain, result=True, reason='', verbose=False):
+    str = domain
+
+    if verbose:
+        str += " O" if result else " X"
+
+    if reason and verbose:
+        str += f" {reason}"
+
+    if result or verbose:
+        print(str)
+    
+
+def test_domain(domain, verbose):
     oks = open("domains_ok.txt", "r").read().split("\n")
     kos = open("domains_ko.txt", "r").read().split("\n")
     if domain in oks:
-        print(f"O {domain}")
+        print_result(domain, result=True, reason='cache', verbose=verbose)
         return
     if domain in kos:
-        print(f"X {domain}")
+        print_result(domain, result=False, reason='cache', verbose=verbose)
         return
 
     result_dns = is_dns_active(domain)
     if result_dns:
-        print(f"X {domain} - dns")
+        print_result(domain, result=False, reason='dns', verbose=verbose)
         open("domains_ko.txt", "a").write(domain + "\n")
         return
 
     result_whois = is_domain_used(domain)
     if result_whois:
-        print(f"X {domain} - whois")
+        print_result(domain, result=False, reason='whois', verbose=verbose)
         open("domains_ko.txt", "a").write(domain + "\n")
         return
 
-    print(f"O {domain}")
+    print_result(domain, result=True, reason='', verbose=verbose)
     open("domains_ok.txt", "a").write(domain + "\n")
 
 
@@ -56,12 +69,13 @@ if __name__ == "__main__":
 
     parser.add_argument('domain_regex')
     parser.add_argument('-r', '--random', action='store_true')
+    parser.add_argument('-v', '--verbose', action='store_true')
 
     args = parser.parse_args()
 
     if args.random:
         while True:
-            test_domain(exrex.getone(args.domain_regex))
+            test_domain(exrex.getone(args.domain_regex), args.verbose)
     else:
         for domain in exrex.generate(args.domain_regex):
-            test_domain(domain)
+            test_domain(domain, args.verbose)
