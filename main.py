@@ -50,9 +50,9 @@ def test_domain(domain):
 if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
-        prog='ProgramName',
-        description='Search for domain names and save them to .txt',
-        epilog='Text at the bottom of help')
+        prog='domain_name_finder',
+        description='Find for domain names using regex'
+    )
 
     parser.add_argument('domain_regex')
     parser.add_argument('-r', '--random', action='store_true')
@@ -65,4 +65,3 @@ if __name__ == "__main__":
     else:
         for domain in exrex.generate(args.domain_regex):
             test_domain(domain)
-        print("---over---")

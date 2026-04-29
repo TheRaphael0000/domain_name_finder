@@ -1,7 +1,7 @@
 [project]
 name = "domain-name-finder"
 version = "0.1.0"
-description = "Add your description here"
+description = "Find domain name using regex"
 readme = "README.md"
 requires-python = ">=3.10"
 dependencies = [
