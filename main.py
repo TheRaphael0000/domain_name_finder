@@ -64,10 +64,6 @@ def test_domain(domain, verbose):
 
 
 if __name__ == "__main__":
-    # ensure files exist
-    open(ko_filename, "a+").write("")
-    open(ok_filename, "a+").write("")
-
     parser = argparse.ArgumentParser(
         prog='domain_name_finder',
         description='Find domain names using regex'
@@ -76,8 +72,13 @@ if __name__ == "__main__":
     parser.add_argument('domain_regex')
     parser.add_argument('-r', '--random', action='store_true')
     parser.add_argument('-v', '--verbose', action='store_true')
+    parser.add_argument('-c', '--clear-cache', action='store_true')
 
     args = parser.parse_args()
+
+    # ensure files exist or clear them
+    open(ko_filename, "w+" if args.clear_cache else "a+").write("")
+    open(ok_filename, "w+" if args.clear_cache else "a+").write("")
 
     if args.random:
         while True:
