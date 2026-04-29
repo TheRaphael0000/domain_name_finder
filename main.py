@@ -25,25 +25,25 @@ def test_domain(domain):
     oks = open("domains_ok.txt", "r").read().split("\n")
     kos = open("domains_ko.txt", "r").read().split("\n")
     if domain in oks:
-        print(domain, "ok cached")
+        print(f"O {domain}")
         return
     if domain in kos:
-        print(domain, "ko cached")
+        print(f"X {domain}")
         return
 
     result_dns = is_dns_active(domain)
     if result_dns:
-        print(domain, "ko dns")
+        print(f"X {domain} - dns")
         open("domains_ko.txt", "a").write(domain + "\n")
         return
 
     result_whois = is_domain_used(domain)
     if result_whois:
-        print(domain, "ko whois")
+        print(f"X {domain} - whois")
         open("domains_ko.txt", "a").write(domain + "\n")
         return
 
-    print(domain, "ok")
+    print(f"O {domain}")
     open("domains_ok.txt", "a").write(domain + "\n")
 
 
